@@ -37,6 +37,11 @@ The built jar will be in `build/libs/Ivy-1.0.jar`.
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+## To-do list
+- **Punishment templates**: Adding a wellmade & configurable templating system
+- **More punishment types**: Only /mute & /unmute has been integrated so far
+- **API Rewrite**: Rewrite the RESTful API to be a lot more secure, and useful too.
+
 ## License
 
 This project is licensed under the Mozilla Public License 2.0 - see the [LICENSE](LICENSE) file for details.
