@@ -1,0 +1,5 @@
+name: Ivy
+version: '1.0'
+main: cat.aubrey.ivy.Ivy
+api-version: '1.21'
+load: STARTUP

@@ -1,0 +1,5 @@
+
+discord-webhook-url: "https://discord.com/api/webhooks/meowmeow"
+api:
+  port: 8080
+  key: "owo_whats_this_?"
