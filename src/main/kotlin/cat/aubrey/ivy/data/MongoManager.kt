@@ -35,7 +35,7 @@ class MongoManager(connectionString: String) : DatabaseManager {
     private val evidenceCollection = database.getCollection("evidence")
 
     override fun initTables() {
-        // MongoDB doesn't require table creation, but we can create indexes for better performance
+        // mongo doesn't require table creation but we can create indexes for better performance
         punishmentsCollection.createIndex(Document("player_uuid", 1).append("type", 1))
         punishmentsCollection.createIndex(Document("expiration", 1))
         auditLogCollection.createIndex(Document("timestamp", -1))
