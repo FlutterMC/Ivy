@@ -1,5 +1,4 @@
 @file:Suppress("DEPRECATION")
-
 /**
  * ChatListener.kt
  * 
@@ -9,7 +8,7 @@
  *
  * @author FlutterMC (https://github.com/FlutterMC/)
  * @contributor Aubrey @ aubrey.rs
- * @since 2024-09-08
+ * @since 2024-09-12
  * @version 1.0
  */
 

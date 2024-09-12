@@ -7,34 +7,33 @@
  *
  * @author FlutterMC (https://github.com/FlutterMC/)
  * @contributor Aubrey @ aubrey.rs
- * @since 2024-09-08
+ * @since 2024-09-12
  * @version 1.0
  */
 
 package cat.aubrey.ivy
 
 import co.aikar.commands.PaperCommandManager
-import com.zaxxer.hikari.HikariConfig
-import com.zaxxer.hikari.HikariDataSource
 import org.bukkit.plugin.java.JavaPlugin
 import cat.aubrey.ivy.cmd.add.Mute
 import cat.aubrey.ivy.cmd.remove.UnMute
 import cat.aubrey.ivy.cmd.Rollback
 import cat.aubrey.ivy.cmd.AuditLog
 import cat.aubrey.ivy.cmd.Evidence
-import cat.aubrey.ivy.data.DataManager
+import cat.aubrey.ivy.data.DatabaseManager
+import cat.aubrey.ivy.data.SQLiteManager
+import cat.aubrey.ivy.data.SQLManager
+import cat.aubrey.ivy.data.MongoManager
 import cat.aubrey.ivy.util.ChatListener
 import cat.aubrey.ivy.handler.Config
 import cat.aubrey.ivy.util.Webhook
 import cat.aubrey.ivy.util.API
 import cat.aubrey.ivy.types.Time
 import org.bukkit.Bukkit
-import java.io.File
 
 class Ivy : JavaPlugin() {
 
-    lateinit var dataManager: DataManager
-    private lateinit var hikariDataSource: HikariDataSource
+    lateinit var dataManager: DatabaseManager
     lateinit var commandManager: PaperCommandManager
     private lateinit var config: Config
     lateinit var webhook: Webhook
@@ -59,29 +58,28 @@ class Ivy : JavaPlugin() {
     }
 
     private fun initializePlugin() {
-        ensureDataFolderExists()
         config = Config(this).apply { load() }
         webhook = Webhook(config.getDiscordWebhookUrl())
         initializeDatabase()
-        dataManager = DataManager(hikariDataSource)
         commandManager = PaperCommandManager(this)
     }
 
-    private fun ensureDataFolderExists() {
-        if (!dataFolder.exists()) {
-            dataFolder.mkdirs()
-        }
-    }
-
     private fun initializeDatabase() {
-        val dbFile = File(dataFolder, "ivy.db")
-        val config = HikariConfig().apply {
-            jdbcUrl = "jdbc:sqlite:${dbFile.absolutePath}"
-            driverClassName = "org.sqlite.JDBC"
-            maximumPoolSize = 10
+        val dbType = config.getDatabaseType()
+        val connectionString = config.getDatabaseConnectionString()
+
+        dataManager = try {
+            when (dbType.toLowerCase()) {
+                "sqlite" -> SQLiteManager(connectionString)
+                "mysql" -> SQLManager(connectionString)
+//                "mongodb" -> MongoManager(connectionString)
+                else -> throw IllegalArgumentException("Unsupported database type: $dbType")
+            }
+        } catch (e: Exception) {
+            logger.severe("Failed to initialize database: ${e.message}")
+            throw e
         }
-        hikariDataSource = HikariDataSource(config)
-        DataManager(hikariDataSource).initTables()
+        dataManager.initTables()
     }
 
     private fun registerListenersAndCommands() {
@@ -120,8 +118,8 @@ class Ivy : JavaPlugin() {
     }
 
     private fun shutdownPlugin() {
-        if (::hikariDataSource.isInitialized) {
-            hikariDataSource.close()
+        if (::dataManager.isInitialized) {
+            dataManager.close()
         }
         if (::apiServer.isInitialized) {
             apiServer.stop()

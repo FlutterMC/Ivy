@@ -1,5 +1,9 @@
-
 discord-webhook-url: "https://discord.com/api/webhooks/meowmeow"
 api:
   port: 8080
   key: "owo_whats_this_?"
+database:
+  type: "sqlite"  # sqlite, mysql, mongodb
+  connection-string: "ivy.db"
+  # For MySQL "jdbc:mysql://localhost:3306/ivy?user=username&password=password"
+  #NO WORKY !!!!!!!!!! For MongoDB, "mongodb://username:password@localhost:27017/ivy"

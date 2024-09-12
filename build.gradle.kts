@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "2.0.20"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.1"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
@@ -21,6 +21,8 @@ dependencies {
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
     implementation("org.xerial:sqlite-jdbc:3.46.1.0")
     implementation("com.google.code.gson:gson:2.11.0")
+    implementation("org.mongodb:mongodb-driver-sync:5.1.4")
+
 }
 
 java {
